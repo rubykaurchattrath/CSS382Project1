@@ -200,8 +200,53 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #to be explored/visited (FIFO): takes in an item (cost+heuristic)
+    frontier = util.PriorityQueue()
+
+    exploredNodes = [] #holds (state, cost)
+
+    startState = problem.getStartState()
+    startNode = (startState, [], 0) #(state, action, cost)
+
+    frontier.push(startNode, 0)
+
+    while not frontier.isEmpty():
+
+        #begin exploring/visiting the first node on the frontier (lowest-combined (cost+heuristic))
+        currentState, actions, currentCost = frontier.pop()
+
+        #put popped the node into explored/visited list
+        currentNode = (currentState, currentCost)
+        exploredNodes.append((currentState, currentCost))
+
+        if problem.isGoalState(currentState):
+            return actions
+
+        else:
+            #list of (successor, action, stepCost)
+            successors = problem.getSuccessors(currentState)
+
+            #examine each of the successors
+            for succState, succAction, succCost in successors:
+                newAction = actions + [succAction]
+                newCost = problem.getCostOfActions(newAction)
+                newNode = (succState, newAction, newCost)
+
+                #check if the successor has been explored/visited
+                already_explored = False
+                for explored in exploredNodes:
+                    #examine each explored node tuple
+                    exploredState, exploredCost = explored
+
+                    if (succState == exploredState) and (newCost >= exploredCost):
+                        already_explored = True
+
+                #if the successor has not yet been explored/visited, put on the frontier & explored/visited list
+                if not already_explored:
+                    frontier.push(newNode, newCost + heuristic(succState, problem))
+                    exploredNodes.append((succState, newCost))
+
+    return actions
 
 
 # Abbreviations
