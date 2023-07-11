@@ -505,8 +505,30 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** YOUR CODE HERE ***"
-    return 0
+    heuristic = 0
+    foodList = foodGrid.asList()
+    
+    #calculate distance from the current node to the foodcontaing nodes
+    if len(foodList) > 0:
+        closestPoint = findClosestPoint(position, foodList)
+        farthestPoint = findFarthestPoint(position, foodList)
+        
+        closestPointIndex = closestPoint[0]
+        farthestPointIndex = farthestPoint[0]
+        
+        currentNode = problem.startingGameState
+        closestFoodNode = foodList[closestPointIndex]
+        farthestFoodNode = foodList[farthestPointIndex]
+        
+        #distance between the current location & the closest manhattan node
+        currentToClosest = mazeDistance(position, closestFoodNode, currentNode)
+        
+        #distance between the closest manhattan node & farthest manhattan node
+        closestToFarthest = mazeDistance(closestFoodNode, farthestFoodNode, currentNode)
+        
+        heuristic = currentToClosest + closestToFarthest
+    
+    return heuristic
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -530,7 +552,7 @@ class ClosestDotSearchAgent(SearchAgent):
         Returns a path (a list of actions) to the closest dot, starting from
         gameState.
         """
-        # Here are some useful elements of the startState
+        # Here are some of the useful elements for startState
         startPosition = gameState.getPacmanPosition()
         food = gameState.getFood()
         walls = gameState.getWalls()
