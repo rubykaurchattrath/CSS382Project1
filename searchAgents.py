@@ -287,8 +287,29 @@ class CornersProblem(search.SearchProblem):
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
-        "*** YOUR CODE HERE ***"
 
+        #Set the starting game state
+        self.startingGameState = startingGameState
+        
+        #Initialize the list to track visited corners
+        cornersVisited = [False, False, False, False]
+        
+        #Check if the starting position is one of the corners and mark it as visited
+        if self.startingPosition == self.corners[0]:
+            cornersVisited[0] = True
+        
+        if self.startingPosition == self.corners[1]:
+            cornersVisited[1] = True
+        
+        if self.startingPosition == self.corners[2]:
+            cornersVisited[2] = True
+        
+        if self.startingPosition == self.corners[3]:
+            cornersVisited[3] = True
+        
+        # Set the starting state with the starting position and visited corners
+        self.startingState = (self.startingPosition, tuple(cornersVisited))
+        
     def getStartState(self):
         """
         Returns the start state (in your state space, not the full Pacman state
