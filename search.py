@@ -86,8 +86,38 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    #states to be explored (LIFO). holds nodes in form (state, action)
+    frontier = util.Stack()
+    #previously explored states (for path checking), holds states
+    exploredNodes = []
+    #define start node
+    startState = problem.getStartState()
+    startNode = (startState, [])
+    
+    frontier.push(startNode)
+    
+    while not frontier.isEmpty():
+        #begin exploring last (most-recently-pushed) node on frontier
+        currentState, actions = frontier.pop()
+        
+        if currentState not in exploredNodes:
+            #mark current node as explored
+            exploredNodes.append(currentState)
+
+            if problem.isGoalState(currentState):
+                return actions
+            else:
+                #get list of possible successor nodes in 
+                #form (successor, action, stepCost)
+                successors = problem.getSuccessors(currentState)
+                
+                #push each successor to frontier
+                for succState, succAction, succCost in successors:
+                    newAction = actions + [succAction]
+                    newNode = (succState, newAction)
+                    frontier.push(newNode)
+
+    return actions  
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
