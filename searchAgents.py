@@ -379,9 +379,40 @@ def cornersHeuristic(state, problem):
     """
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
-
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    
+    heuristic = 0
+        currentLocation = state[0]
+        cornersUnvisited = state[1]
+        
+        #unvisited corners
+        unvisitedCorners = []
+        for i in range(len(cornersUnvisited)):
+            if not cornersUnvisited[i]:
+                unvisitedCorners.append(corners[i])
+    
+        #calculate distance from the current node to all of the corner nodes
+        if len(unvisitedCorners) > 0:
+            closestPoint = findClosestPoint(currentLocation, unvisitedCorners)
+            farthestPoint = findFarthestPoint(currentLocation, unvisitedCorners)
+            
+            closestPointIndex = closestPoint[0]
+            farthestPointIndex = farthestPoint[0]
+    
+            currentNode = problem.startingGameState
+            closestNode = unvisitedCorners[closestPointIndex]
+            farthestNode = unvisitedCorners[farthestPointIndex]
+    
+            #mazeDistance returns the maze distance between two pts: example: mazeDistance( (2,4), (5,6), gameState)
+    
+            #distance between the current location & the closest manhattan node
+            currentToClosest = mazeDistance(currentLocation, closestNode, currentNode)
+    
+            #distance between the closest manhattan node & the farthest manhattan node
+            closestToFarthest = mazeDistance(closestNode, farthestNode, currentNode)
+    
+            heuristic = currentToClosest + closestToFarthest
+    
+    return heuristic
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
