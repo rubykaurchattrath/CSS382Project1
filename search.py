@@ -86,32 +86,32 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    #states to be explored (LIFO). holds nodes in form (state, action)
+    #states that need to be explored/visited (LIFO). holds nodes in form (state, action)
     frontier = util.Stack()
-    #previously explored states (for path checking), holds states
+    #previously explored/visited states, holds states (check path)
     exploredNodes = []
-    #define start node
+    #define the start node
     startState = problem.getStartState()
     startNode = (startState, [])
     
     frontier.push(startNode)
     
     while not frontier.isEmpty():
-        #begin exploring last (most-recently-pushed) node on frontier
+        #begin expolaration of the last node on the frontier
         currentState, actions = frontier.pop()
         
         if currentState not in exploredNodes:
-            #mark current node as explored
+            #mark current node as already explored/visited
             exploredNodes.append(currentState)
 
             if problem.isGoalState(currentState):
                 return actions
             else:
-                #get list of possible successor nodes in 
+                #get list of the possible successor nodes in
                 #form (successor, action, stepCost)
                 successors = problem.getSuccessors(currentState)
                 
-                #push each successor to frontier
+                #push each one of the successors to the frontier
                 for succState, succAction, succCost in successors:
                     newAction = actions + [succAction]
                     newNode = (succState, newAction)
